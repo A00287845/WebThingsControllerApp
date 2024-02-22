@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/propertyName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Property Name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+    <TextView
+        android:id="@+id/propertyValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Property Value"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+    <TextView
+        android:id="@+id/propertyType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Property Type"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+    <!-- Include EditText and Button only if the property is editable -->
+    <EditText
+        android:id="@+id/editPropertyValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Edit Value"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/submitEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:visibility="gone"/>
+</LinearLayout>

@@ -1,10 +1,10 @@
-package com.example.webthingscontrollerapp;
+package com.example.webthingscontrollerapp.view.viewmodel.model.pojo;
 
 import androidx.annotation.NonNull;
 
 public class Property {
     private String name;
-    private Object value; // Use Object to accommodate different types (int, boolean, etc.)
+    private Object value;
     private String type;
     private boolean readOnly;
     private String title;
