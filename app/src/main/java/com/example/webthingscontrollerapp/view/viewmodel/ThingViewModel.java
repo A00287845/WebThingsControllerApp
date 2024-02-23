@@ -97,3 +97,4 @@ public class ThingViewModel extends ViewModel {
     public void updateThing(){}
 }
 
+
