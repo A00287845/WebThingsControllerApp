@@ -2,12 +2,24 @@ package com.example.webthingscontrollerapp.view.viewmodel.model.pojo;
 
 import androidx.annotation.NonNull;
 
+import java.util.List;
+
 public class Property {
     private String name;
     private Object value;
     private String type;
     private boolean readOnly;
     private String title;
+    private List<Link> links;
+    private String owner;
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 
     public String getName() {
         return name;
@@ -49,6 +61,23 @@ public class Property {
         this.title = title;
     }
 
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<Link> links) {
+        this.links = links;
+    }
+
+    public String getPropertyUrl(){
+        for(Link l: links){
+            if(l.getRel().equals("property")){
+                return l.getHref();
+            }
+        }
+        return "invalid or no links found";
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -57,6 +86,7 @@ public class Property {
                 ", value=" + value +
                 ", type='" + type + '\'' +
                 ", readOnly=" + readOnly +
+                ", thisPropertiesUrl=" + getPropertyUrl() +
                 ", title='" + title + '\'' +
                 '}';
     }

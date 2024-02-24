@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.webthingscontrollerapp.R;
+import com.example.webthingscontrollerapp.view.MainActivity;
+import com.example.webthingscontrollerapp.view.viewmodel.model.ThingRepository;
 import com.example.webthingscontrollerapp.view.viewmodel.model.pojo.Property;
 
 import java.util.List;
@@ -20,11 +22,13 @@ import java.util.Map;
 public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.ViewHolder> {
 
     private final List<Property> propertyList = new ArrayList<>(); // Store properties as a list internally
+    private final MainActivity.PropertyAdapterInteractionListener listener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView propertyName, propertyValue, propertyType;
         public EditText editPropertyValue;
         public Button submitEdit;
+
 
         public ViewHolder(View view) {
             super(view);
@@ -36,8 +40,9 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.ViewHo
         }
     }
 
-    public PropertyAdapter(Map<String, Property> properties) {
+    public PropertyAdapter(Map<String, Property> properties, MainActivity.PropertyAdapterInteractionListener listener) {
         this.propertyList.addAll(properties.values());
+        this.listener = listener;
     }
 
     @NonNull
@@ -57,15 +62,25 @@ public class PropertyAdapter extends RecyclerView.Adapter<PropertyAdapter.ViewHo
         if (!property.isReadOnly()) {
             holder.editPropertyValue.setVisibility(View.VISIBLE);
             holder.submitEdit.setVisibility(View.VISIBLE);
+            holder.submitEdit.setOnClickListener(p -> postUpdatedValue(holder.editPropertyValue, property));
         } else {
             holder.editPropertyValue.setVisibility(View.GONE);
             holder.submitEdit.setVisibility(View.GONE);
         }
     }
 
+    private void postUpdatedValue(EditText editPropertyValue, Property property) {
+        String etValue = editPropertyValue.getText().toString();
+        listener.onItemClicked(etValue, property);
+    }
+
     @Override
     public int getItemCount() {
         return propertyList.size();
+    }
+
+    private void updatePropertyChangedView(){
+
     }
 }
 

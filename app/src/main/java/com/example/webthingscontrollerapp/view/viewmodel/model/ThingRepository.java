@@ -33,18 +33,19 @@ public class ThingRepository {
         Log.d(LOG_STRING, "Thing repository getThings()");
         Call<ResponseBody> call = webThingsService.listThings();
 
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     try {
                         Log.d(LOG_STRING, "Thing repository onResponse getThings SUCCESSFUL()");
-                        String json = response.body().string();
-                        Log.d(LOG_STRING, "Thing repository onResponse getThings bodytext: " + json);
+                        String jsonResponse = response.body().string();
+                        Log.d(LOG_STRING, "Thing repository onResponse getThings bodytext: " + jsonResponse);
 
                         Gson gson = new Gson();
-                        Type listOfThingsType = new TypeToken<List<Thing>>(){}.getType();
-                        List<Thing> things = gson.fromJson(json, listOfThingsType);
+                        Type listOfThingsType = new TypeToken<List<Thing>>() {
+                        }.getType();
+                        List<Thing> things = gson.fromJson(jsonResponse, listOfThingsType);
                         listener.onDataLoaded(things);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -65,19 +66,20 @@ public class ThingRepository {
 
     public void getThingProperties(final ThingPropertiesLoadListener listener, String propertiesUrl) {
         Log.d(LOG_STRING, "Thing repository getThingProperties()");
-        Call<ResponseBody> call = webThingsService.mapOfThingsProperties(propertiesUrl);
+        Call<ResponseBody> call = webThingsService.getMapOfThingsProperties(propertiesUrl);
 
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     try {
-                        String json = response.body().string();
-                        Log.d(LOG_STRING, "Thing repository onResponse getThingProperties bodytext: " + json);
+                        String jsonResponse = response.body().string();
+                        Log.d(LOG_STRING, "Thing repository onResponse getThingProperties bodytext: " + jsonResponse);
 
                         Gson gson = new Gson();
-                        Type mapOfPropertyValuesType = new TypeToken<Map<String, Object>>(){}.getType();
-                        Map<String, Object> propertyValues = gson.fromJson(json, mapOfPropertyValuesType);
+                        Type mapOfPropertyValuesType = new TypeToken<Map<String, Object>>() {
+                        }.getType();
+                        Map<String, Object> propertyValues = gson.fromJson(jsonResponse, mapOfPropertyValuesType);
 
                         listener.onPropertiesLoaded(propertyValues);
                     } catch (IOException e) {
@@ -96,6 +98,44 @@ public class ThingRepository {
                 listener.onPropertiesLoadFailed();
             }
         });
+    }
+
+    public void setThingPropertyValue(String url, Object value, String propertyToUpdate, PropertyUpdateListener listener){
+
+        Log.d(LOG_STRING, "Thing repository setThingPropertyValue()");
+        Call<ResponseBody> call = webThingsService.postPropertyValue(url, Map.of(propertyToUpdate, value));
+
+        call.enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        String jsonResponse = response.body().string();
+                        Log.d(LOG_STRING, "Thing repository onResponse setThingPropertyValue bodytext: " + jsonResponse);
+                        listener.onSuccessfulResponse();
+
+                    } catch (IOException e) {
+                        Log.e(LOG_STRING, "Error reading response body", e);
+                        listener.onFailedResponse();
+                    }
+                } else {
+                    Log.d(LOG_STRING, "Response not successful: " + response.code() + " - " + response.message());
+                    listener.onFailedResponse();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                Log.e(LOG_STRING, "Failed to post property value", t);
+//                listener.onPropertiesLoadFailed();
+            }
+        });
+
+    }
+
+    public interface PropertyUpdateListener{
+        void onSuccessfulResponse();
+        void onFailedResponse();
     }
 
     public interface DataLoadListener {

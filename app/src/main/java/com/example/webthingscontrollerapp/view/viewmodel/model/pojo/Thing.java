@@ -97,6 +97,12 @@ public class Thing {
         isExpanded = expanded;
     }
 
+    public void setChildParentIds(){
+        properties.forEach((key, value) -> {
+            value.setOwner(title);
+        });
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -106,6 +112,7 @@ public class Thing {
                 ", href='" + href + '\'' +
                 ", properties=" + properties +
                 ", links=" + links +
+                ", thisThingsPropertiesUrl=" + getPropertiesUrl() +
                 ", isExpanded=" + isExpanded +
                 '}';
     }

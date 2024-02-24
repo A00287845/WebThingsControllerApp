@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.webthingscontrollerapp.R;
+import com.example.webthingscontrollerapp.view.MainActivity;
+import com.example.webthingscontrollerapp.view.viewmodel.model.pojo.Property;
 import com.example.webthingscontrollerapp.view.viewmodel.model.pojo.Thing;
 
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.List;
 public class ThingAdapter extends RecyclerView.Adapter<ThingAdapter.ViewHolder> {
 
     private final List<Thing> thingList;
+    private final MainActivity.PropertyAdapterInteractionListener propertyListener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView thingTitle, thingDescription;
@@ -30,8 +33,19 @@ public class ThingAdapter extends RecyclerView.Adapter<ThingAdapter.ViewHolder> 
         }
     }
 
-    public ThingAdapter(List<Thing> thingList) {
+    public ThingAdapter(List<Thing> thingList, MainActivity.PropertyAdapterInteractionListener propertyListener) {
         this.thingList = thingList;
+        this.propertyListener = propertyListener;
+    }
+
+//    public void updateData(List<Thing> newThings) {
+//        this.thingList.clear();
+//        this.thingList.addAll(newThings);
+//        notifyDataSetChanged(); // Notifies the entire list has changed
+//    }
+
+    public void updateProperty(Property property){
+
     }
 
     @NonNull
@@ -48,7 +62,7 @@ public class ThingAdapter extends RecyclerView.Adapter<ThingAdapter.ViewHolder> 
         holder.thingDescription.setText(thing.getDescription());
 
         holder.propertiesRecyclerView.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
-        PropertyAdapter propertyAdapter = new PropertyAdapter(thing.getProperties());
+        PropertyAdapter propertyAdapter = new PropertyAdapter(thing.getProperties(), propertyListener);
         holder.propertiesRecyclerView.setAdapter(propertyAdapter);
 
         holder.propertiesRecyclerView.setVisibility(thing.isExpanded() ? View.VISIBLE : View.GONE);
@@ -58,6 +72,10 @@ public class ThingAdapter extends RecyclerView.Adapter<ThingAdapter.ViewHolder> 
             thing.setExpanded(!isExpanded);
             notifyItemChanged(position);
         });
+    }
+
+    public interface UpdateThisPropertyListener {
+        void updatePropertyView(Property property);
     }
 
     @Override
