@@ -132,16 +132,14 @@ public class ThingViewModel extends ViewModel {
                 @Override
                 public void onSuccessfulResponse() {
                     Log.d(LOG_STRING, "ThingViewModel updateThingProperty() succeeded, reloading ");
-//                    loadThings();
                     List<Thing> temp = things.getValue();
-
+                    property.setValue(updatedValue);
                     alteredProperty.postValue(property);
                 }
 
                 @Override
                 public void onFailedResponse() {
                     Log.d(LOG_STRING, "ThingViewModel updateThingProperty() failed to post value");
-
                 }
             });
         }

@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel.getAlteredProperty().observe(this, property -> {
             if(initialised){
+                Log.d(LOG_STRING, "MainActivity observed altered property(): " + property.toString());
+
                 thingAdapter.updateProperty(property);
             }
         });
@@ -61,7 +63,8 @@ public class MainActivity extends AppCompatActivity {
             thingRecyclerView.setAdapter(thingAdapter);
             initialised = true;
         } else {
-            thingAdapter.updateData(things);
+            Log.d(LOG_STRING, "MainActivity datasetUpdated");
+           // thingAdapter.updateData(things);
         }
     }
 
